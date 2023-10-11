@@ -5,24 +5,26 @@ const App = () => {
   const navigate = useNavigate();
   const [roomName, setRoomName] = useState(null);
 
+  // This navigates the user to a gameroom with the random name created in the createRoom() function
   useEffect(() => {
     if (roomName) {
       navigate(`/gameroom/${roomName}`);
     }
   }, [roomName]);
 
+  // This function creates a room name with four random variables, adverb, adjective, museum name and a random 3 digit number
   const createRoom = () => {
-    const list1 = ['Very', 'Nearly', 'Insanely', 'Amazingly'];
-    const list2 = ['Empty', 'Slippery', 'Brilliant', 'Dreamy'];
-    const list3 = ['MoMA', 'Louvre', 'PAMM', 'Guggenheim', 'Tate'];
+    const adverbs = ['Very', 'Nearly', 'Insanely', 'Amazingly'];
+    const adjectives = ['Empty', 'Slippery', 'Brilliant', 'Dreamy'];
+    const museumNames = ['MoMA', 'Louvre', 'PAMM', 'Guggenheim', 'Tate'];
   
-    const word1 = list1[Math.floor(Math.random() * list1.length)];
-    const word2 = list2[Math.floor(Math.random() * list2.length)];
-    const word3 = list3[Math.floor(Math.random() * list3.length)];
+    const randomAdverb = adverbs[Math.floor(Math.random() * adverbs.length)];
+    const randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)];
+    const randomName = museumNames[Math.floor(Math.random() * museumNames.length)];
 
     const randomNumber = Math.floor(Math.random() * (999 - 100 + 1)) + 100;
 
-    const uniqueRoomName = `${word1}_${word2}_${word3}_${randomNumber}`;
+    const uniqueRoomName = `${randomAdverb}_${randomAdjective}_${randomName}_${randomNumber}`;
 
     setRoomName(uniqueRoomName);
   };
