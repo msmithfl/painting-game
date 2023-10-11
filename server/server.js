@@ -19,7 +19,6 @@ const io =  new Server(server, {
 // Initialize an object to store users in rooms
 const usersInRooms = {};
 
-
 io.on('connection', (socket) => {
   console.log(`A user ${socket.id} connected`);
 

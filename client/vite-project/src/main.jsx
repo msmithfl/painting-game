@@ -14,7 +14,7 @@ root.render(
     <Router>
       <Routes>
         <Route path="/" element={<App />} />
-        <Route path="/gameroom/:roomName" element={<Room />} />
+        <Route path="/lobby/:roomName" element={<Room />} />
         <Route path="*" element={<Navigate to="/" />} /> {/* Fallback route */}
       </Routes>
     </Router>

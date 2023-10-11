@@ -8,7 +8,7 @@ const App = () => {
   // This navigates the user to a gameroom with the random name created in the createRoom() function
   useEffect(() => {
     if (roomName) {
-      navigate(`/gameroom/${roomName}`);
+      navigate(`/lobby/${roomName}`);
     }
   }, [roomName]);
 
@@ -33,6 +33,7 @@ const App = () => {
     <div>
       <h1>PAMM Painting Game</h1>
       <button onClick={createRoom}>Create a Game Room!</button>
+      <button>Play Solo!</button>
     </div>
   );
 };

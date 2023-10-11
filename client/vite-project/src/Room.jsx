@@ -46,7 +46,8 @@ const Room = () => {
   // Use to check if all players are ready
   useEffect(() => {
     // allUsersReady is only set to true if the userList is not empty (userList.length > 0) and if all users in the list have their isReady property set to true
-    const allUsersReady = userList.length > 0 && userList.every((user) => user.isReady);
+    // changed to userList.length > 1 to account for if a user leaving room briefly
+    const allUsersReady = userList.length > 1 && userList.every((user) => user.isReady);
 
     if (allUsersReady){
       console.log('All Users Ready!');
