@@ -2,13 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import io from 'socket.io-client';
 
-// const getRandomUsername = () => {
-//   return `User${Math.floor(Math.random() * 10000)}`;
-// };
-
 const getRandomUsername = () => {
   const adverbs = ['Whimsically', 'Wackily', 'Hilariously', 'Zestily', 'Quirkily'];
-  const adjectives = ['Zany', 'Absurd', 'Eccentric', 'Ludicrous', 'Bizarre'];
+  const adjectives = ['Zany', 'Boisterous', 'Eccentric', 'Ludicrous', 'Bizarre', 'Buff'];
   const paintersLastNames = ['Da Vinci', 'Van Gogh', 'Picasso', 'Rembrandt', 'Monet', 'Michelangelo'];
   
   const randomAdverb = adverbs[Math.floor(Math.random() * adverbs.length)];

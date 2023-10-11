@@ -32,7 +32,7 @@ io.on('connection', (socket) => {
     if (!usersInRooms[roomName]) {
       usersInRooms[roomName] = [];
     }
-    usersInRooms[roomName].push({ id: socket.id, userName: userName});
+    usersInRooms[roomName].push({ id: socket.id, userName: userName, roomName: roomName});
 
     // Emit the updated list of users to all users in the room
     io.to(roomName).emit('updateUserList', usersInRooms[roomName]);
