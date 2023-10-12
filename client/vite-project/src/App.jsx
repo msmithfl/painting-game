@@ -32,8 +32,8 @@ const App = () => {
   return (
     <div>
       <h1>PAMM Painting Game</h1>
-      <button onClick={createRoom}>Create a Game Room!</button>
-      <button>Play Solo!</button>
+      <button onClick={createRoom}>Create a Game Room</button>
+      <button>Play Solo</button>
     </div>
   );
 };

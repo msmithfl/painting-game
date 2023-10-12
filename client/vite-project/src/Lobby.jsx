@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import io from 'socket.io-client';
 
 // This function creates a random user name for each player using 4 variables
 const getRandomUsername = () => {
+  // If the username has already been set in localStorage, use that **NOT WORKING ATM
+  // if (localStorage.getItem('username') !== null) { return localStorage.getItem('username') }
+
   const adverbs = ['Whimsically', 'Wackily', 'Hilariously', 'Zestily', 'Quirkily'];
   const adjectives = ['Zany', 'Boisterous', 'Eccentric', 'Ludicrous', 'Bizarre', 'Buff'];
   const paintersLastNames = ['Da Vinci', 'Van Gogh', 'Picasso', 'Rembrandt', 'Monet', 'Michelangelo'];
@@ -16,15 +19,17 @@ const getRandomUsername = () => {
   return `${randomAdverb}_${randomAdjective}_${randomLastName}_${randomNumber}`;
 }
 
-const Room = () => {
+const Lobby = () => {
   const { roomName } = useParams();
+  const navigate = useNavigate();
   const [userList, setUserList] = useState([]);
   const [isPlayerReady, setIsPlayerReady] = useState(false);
   const [userName, _] = useState(getRandomUsername());
+  localStorage.setItem('username', userName);
 
   const [socket, setSocket] = useState(null);
 
-  // This joins a gameroom with the URL parameter roomName
+  // This joins a room (lobby) with the URL parameter roomName (set in previous screen, App.jsx)
   useEffect(() => {
     const newSocket = io('http://localhost:3001');
     setSocket(newSocket);
@@ -50,17 +55,20 @@ const Room = () => {
     const allUsersReady = userList.length > 1 && userList.every((user) => user.isReady);
 
     if (allUsersReady){
-      console.log('All Users Ready!');
+      //console.log('All Users Ready!');
+      
+      navigate(`/gameroom/${roomName}`);
     }
-  }, [userList])
+  }, [userList]);
 
   const handlePlayerReady = () => {
     setIsPlayerReady(!isPlayerReady);
-
     // Emit the 'playerReady' event to the server
-    if (socket) {
-      socket.emit('playerReady', isPlayerReady);
-    }
+    if (socket) { socket.emit('playerReady', isPlayerReady); }
+  }
+
+  const handleShowUsers = () => {
+    console.log(userList);
   }
 
   return (
@@ -73,8 +81,9 @@ const Room = () => {
         ))}
       </ul>
       <button onClick={handlePlayerReady}>{isPlayerReady ? "Waiting..." : "Ready?"}</button>
+      <button onClick={handleShowUsers}>Show Users In Room</button>
     </div>
   );
 };
 
-export default Room;
+export default Lobby;

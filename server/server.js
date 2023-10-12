@@ -20,7 +20,7 @@ const io =  new Server(server, {
 const usersInRooms = {};
 
 io.on('connection', (socket) => {
-  console.log(`A user ${socket.id} connected`);
+  //console.log(`A user ${socket.id} connected`);
 
   // Listening for 'joinRoom' function
   socket.on('joinRoom', (roomName, userName) => {
@@ -33,11 +33,11 @@ io.on('connection', (socket) => {
       usersInRooms[roomName] = [];
     }
     // Add the user to the list of users in the room, pushing socket.id, userName and roomName
-    usersInRooms[roomName].push({ id: socket.id, userName: userName, roomName: roomName, isReady: false });
+    usersInRooms[roomName].push({ id: socket.id, userName: userName, roomName: roomName, isReady: false, score: 0 });
 
     // Emit the updated list of users to all users in the room
     io.to(roomName).emit('updateUserList', usersInRooms[roomName]);
-    console.log(usersInRooms[roomName]);
+    //console.log(usersInRooms[roomName]);
   });
 
   socket.on('playerReady', (isReady) => {
@@ -48,7 +48,19 @@ io.on('connection', (socket) => {
         user.isReady = !isReady;
       }
       io.to(roomName).emit('updateUserList', usersInRooms[roomName]);
-      console.log(usersInRooms[roomName]);
+      //console.log(usersInRooms[roomName]);
+    });
+  });
+
+  socket.on('sendScore', (score) => {
+    // Find the user in the list by socket.id and set isReady to true
+    Object.keys(usersInRooms).forEach((roomName) => {
+      const user = usersInRooms[roomName].find((user) => user.id === socket.id);
+      if (user) {
+        user.score = score;
+      }
+      io.to(roomName).emit('updateUserList', usersInRooms[roomName]);
+      //console.log(usersInRooms[roomName]);
     });
   });
 
@@ -61,7 +73,7 @@ io.on('connection', (socket) => {
       usersInRooms[roomName] = usersInRooms[roomName].filter((user) => user.id !== socket.id);
       // Emit the updated list of users to all users in the room
       io.to(roomName).emit('updateUserList', usersInRooms[roomName]);
-      console.log(usersInRooms[roomName]);
+      //console.log(usersInRooms[roomName]);
     });
   });
 });
