@@ -3,10 +3,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import io from 'socket.io-client';
 
 function TempGameRoom() {
-    const [score, setScore] = useState();
     const navigate = useNavigate();
-
     const { roomName } = useParams();
+    const [score, setScore] = useState();
     const [userList, setUserList] = useState([]);
     const [socket, setSocket] = useState(null);
     const [userName, _] = useState(localStorage.getItem('username'));
@@ -21,18 +20,12 @@ function TempGameRoom() {
         newSocket.on('updateUserList', (users) => {
             setUserList(users);
         });
-    }, [roomName, userName]);
+    }, []); //roomName, userName (previous setup)
 
     const handleScoreSubmit = () => {
-        //console.log(score);
-        //console.log(roomName);
-        //console.log(socket.id);
-        //navigate(`/lobby/${roomName}`);
         if (socket) {
             socket.emit('sendScore', score);
         }
-        
-        console.log(userList);
     }
 
     return (
@@ -52,4 +45,4 @@ function TempGameRoom() {
     )
 }
 
-export default TempGameRoom
+export default TempGameRoom;

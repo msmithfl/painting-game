@@ -22,7 +22,6 @@ const usersInRooms = {};
 io.on('connection', (socket) => {
   //console.log(`A user ${socket.id} connected`);
 
-  // Listening for 'joinRoom' function
   socket.on('joinRoom', (roomName, userName) => {
     // Joining/creating room with random roomName
     socket.join(roomName);
@@ -69,7 +68,6 @@ io.on('connection', (socket) => {
 
     // Handle user removal from all rooms when they disconnect
     Object.keys(usersInRooms).forEach((roomName) => {
-      
       usersInRooms[roomName] = usersInRooms[roomName].filter((user) => user.id !== socket.id);
       // Emit the updated list of users to all users in the room
       io.to(roomName).emit('updateUserList', usersInRooms[roomName]);

@@ -1,27 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { getRandomUsername } from './hooks/getRandomUsername.js';
 import io from 'socket.io-client';
 
-// This function creates a random user name for each player using 4 variables
-const getRandomUsername = () => {
-  // If the username has already been set in localStorage, use that **NOT WORKING ATM
-  // if (localStorage.getItem('username') !== null) { return localStorage.getItem('username') }
-
-  const adverbs = ['Whimsically', 'Wackily', 'Hilariously', 'Zestily', 'Quirkily'];
-  const adjectives = ['Zany', 'Boisterous', 'Eccentric', 'Ludicrous', 'Bizarre', 'Buff'];
-  const paintersLastNames = ['Da Vinci', 'Van Gogh', 'Picasso', 'Rembrandt', 'Monet', 'Michelangelo'];
-  
-  const randomAdverb = adverbs[Math.floor(Math.random() * adverbs.length)];
-  const randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)];
-  const randomLastName = paintersLastNames[Math.floor(Math.random() * paintersLastNames.length)];
-  const randomNumber = Math.floor(1000 + Math.random() * 9000); // Generates a random 4-digit number
-
-  return `${randomAdverb}_${randomAdjective}_${randomLastName}_${randomNumber}`;
-}
-
 const Lobby = () => {
-  const { roomName } = useParams();
   const navigate = useNavigate();
+  const { roomName } = useParams();
   const [userList, setUserList] = useState([]);
   const [isPlayerReady, setIsPlayerReady] = useState(false);
   const [userName, _] = useState(getRandomUsername());
@@ -46,17 +30,15 @@ const Lobby = () => {
     return () => {
       newSocket.disconnect();
     };
-  }, [roomName, userName]);
+  }, []); //roomName, userName (previous setup)
 
   // Use to check if all players are ready
   useEffect(() => {
-    // allUsersReady is only set to true if the userList is not empty (userList.length > 0) and if all users in the list have their isReady property set to true
-    // changed to userList.length > 1 to account for if a user leaving room briefly
+    // check if more than 1 user and all users are ready
     const allUsersReady = userList.length > 1 && userList.every((user) => user.isReady);
 
-    if (allUsersReady){
+    if (allUsersReady) {
       //console.log('All Users Ready!');
-      
       navigate(`/gameroom/${roomName}`);
     }
   }, [userList]);
