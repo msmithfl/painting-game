@@ -3,12 +3,8 @@ import React, { useEffect, useState } from 'react';
 function TestGameroom({ roomName, handleScoreSubmit }) {
   const [score, setScore] = useState();
   const [timer, setTimer] = useState(20); // Set the initial countdown time in seconds
-  const testString = 'hello there';
-
 
   useEffect(() => {
-    console.log("Gameroom mounted");
-
     // Start the countdown when the component mounts
     const countdownInterval = setInterval(() => {
       // Decrement the timer by 1 second

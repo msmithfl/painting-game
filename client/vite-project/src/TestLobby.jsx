@@ -1,6 +1,6 @@
 import React from 'react'
 
-function TestLobby({roomName, userList, isPlayerReady, handlePlayerReady, handleShowUsers}) {
+function TestLobby({roomName, userList, isPlayerReady, handlePlayerReady}) {
   return (
     <div>
         <h2>Lobby: {roomName}</h2>
@@ -11,7 +11,6 @@ function TestLobby({roomName, userList, isPlayerReady, handlePlayerReady, handle
           ))}
         </ul>
         <button onClick={handlePlayerReady}>{isPlayerReady ? "Waiting..." : "Ready?"}</button>
-        <button onClick={handleShowUsers}>Show Users In Room</button>
     </div>
   )
 }

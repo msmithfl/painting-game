@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { getRandomUsername } from './hooks/getRandomUsername.js';
 import io from 'socket.io-client';
 import TestLobby from './TestLobby.jsx';
@@ -7,15 +7,15 @@ import TestGameroom from './TestGameroom.jsx';
 import TestPostGame from './TestPostGame.jsx';
 
 const Lobby = () => {
-  const navigate = useNavigate();
   const { roomName } = useParams();
   const [userList, setUserList] = useState([]);
   const [isPlayerReady, setIsPlayerReady] = useState(false);
   const [userName, _] = useState(getRandomUsername());
   const [gameState, setGameState] = useState('lobby');
-  localStorage.setItem('username', userName);
-
+  
   const [socket, setSocket] = useState(null);
+  
+  localStorage.setItem('username', userName);
 
   // This joins a room (lobby) with the URL parameter roomName (set in previous screen, App.jsx)
   useEffect(() => {
@@ -29,12 +29,7 @@ const Lobby = () => {
     newSocket.on('updateUserList', (users) => {
       setUserList(users);
     });
-    
-    // // Cleanup after socket is unmounted
-    // return () => {
-    //   newSocket.disconnect();
-    // };
-  }, []); //roomName, userName (previous setup)
+  }, []);
 
   // Checking if all players are ready
   useEffect(() => {
@@ -43,7 +38,6 @@ const Lobby = () => {
 
     if (allUsersReady) {
       console.log('All Users Ready!');
-      //navigate(`/gameroom/${roomName}`);
       setGameState('gameroom');
     } else {
       console.log('Waiting for Users...')
@@ -56,14 +50,17 @@ const Lobby = () => {
     if (socket) { socket.emit('playerReady', isPlayerReady); }
   }
 
-  const handleShowUsers = () => {
-    console.log(userList);
-  }
-
   const handleScoreSubmit = (score) => {
     console.log(score);
-    //in final implementation this gameState should be set to 'postgame' when the timer is up
+    socket.emit('sendScore', score); 
     setGameState('postgame');
+    console.log(userList);
+    //in final implementation this gameState should be set to 'postgame' when the timer is up
+  }
+
+  const handleGetUsers = () => {
+    //console.log(endUserList);
+    socket.emit('getUsers');
   }
 
   return (
@@ -74,7 +71,6 @@ const Lobby = () => {
           userList={userList}
           isPlayerReady={isPlayerReady}
           handlePlayerReady={handlePlayerReady}
-          handleShowUsers={handleShowUsers}
         />
       }
       {gameState === 'gameroom' &&
@@ -84,10 +80,21 @@ const Lobby = () => {
         />
       }
       {gameState === 'postgame' &&
-        <TestPostGame />
+        <TestPostGame
+          handleGetUsers={handleGetUsers}
+          userList={userList}
+        />
       }
     </div>
   );
 };
 
 export default Lobby;
+
+
+///// if needed, put this in main useEffect
+//    
+    // // Cleanup after socket is unmounted
+    // return () => {
+    //   newSocket.disconnect();
+    // };

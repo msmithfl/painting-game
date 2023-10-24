@@ -58,10 +58,14 @@ io.on('connection', (socket) => {
       if (user) {
         user.score = score;
       }
-      io.to(roomName).emit('updateUserList', usersInRooms[roomName]);
+      //io.to(roomName).emit('updateUserList', usersInRooms[roomName]);
       console.log(usersInRooms[roomName]);
     });
   });
+
+  socket.on('getUsers', () => {
+    console.log('getting users');
+  })
 
   socket.on('disconnect', () => {
     console.log(`User ${socket.id} disconnected`);
