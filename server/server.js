@@ -47,10 +47,10 @@ io.on('connection', (socket) => {
         user.isReady = !isReady;
       }
       io.to(roomName).emit('updateUserList', usersInRooms[roomName]);
-      //console.log(usersInRooms[roomName]);
+      console.log(usersInRooms[roomName]);
     });
   });
-
+  
   socket.on('sendScore', (score) => {
     // Find the user in the list by socket.id and set isReady to true
     Object.keys(usersInRooms).forEach((roomName) => {
@@ -59,7 +59,7 @@ io.on('connection', (socket) => {
         user.score = score;
       }
       io.to(roomName).emit('updateUserList', usersInRooms[roomName]);
-      //console.log(usersInRooms[roomName]);
+      console.log(usersInRooms[roomName]);
     });
   });
 

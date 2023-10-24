@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getRandomUsername } from './hooks/getRandomUsername.js';
 import io from 'socket.io-client';
+import TestLobby from './TestLobby.jsx';
+import TestGameroom from './TestGameroom.jsx';
+import TestPostGame from './TestPostGame.jsx';
 
 const Lobby = () => {
   const navigate = useNavigate();
@@ -9,6 +12,7 @@ const Lobby = () => {
   const [userList, setUserList] = useState([]);
   const [isPlayerReady, setIsPlayerReady] = useState(false);
   const [userName, _] = useState(getRandomUsername());
+  const [gameState, setGameState] = useState('lobby');
   localStorage.setItem('username', userName);
 
   const [socket, setSocket] = useState(null);
@@ -26,20 +30,23 @@ const Lobby = () => {
       setUserList(users);
     });
     
-    // Cleanup after socket is unmounted
-    return () => {
-      newSocket.disconnect();
-    };
+    // // Cleanup after socket is unmounted
+    // return () => {
+    //   newSocket.disconnect();
+    // };
   }, []); //roomName, userName (previous setup)
 
-  // Use to check if all players are ready
+  // Checking if all players are ready
   useEffect(() => {
     // check if more than 1 user and all users are ready
     const allUsersReady = userList.length > 1 && userList.every((user) => user.isReady);
 
     if (allUsersReady) {
-      //console.log('All Users Ready!');
-      navigate(`/gameroom/${roomName}`);
+      console.log('All Users Ready!');
+      //navigate(`/gameroom/${roomName}`);
+      setGameState('gameroom');
+    } else {
+      console.log('Waiting for Users...')
     }
   }, [userList]);
 
@@ -53,17 +60,32 @@ const Lobby = () => {
     console.log(userList);
   }
 
+  const handleScoreSubmit = (score) => {
+    console.log(score);
+    //in final implementation this gameState should be set to 'postgame' when the timer is up
+    setGameState('postgame');
+  }
+
   return (
     <div>
-      <h2>Room: {roomName}</h2>
-      <h3>Users in the Room:</h3>
-      <ul>
-        {userList.map((user) => (
-          <li key={user.id}>{user.userName}{user.isReady ? <p>Ready</p> : <p>Not Ready</p>}</li>
-        ))}
-      </ul>
-      <button onClick={handlePlayerReady}>{isPlayerReady ? "Waiting..." : "Ready?"}</button>
-      <button onClick={handleShowUsers}>Show Users In Room</button>
+      {gameState === 'lobby' && 
+        <TestLobby
+          roomName={roomName}
+          userList={userList}
+          isPlayerReady={isPlayerReady}
+          handlePlayerReady={handlePlayerReady}
+          handleShowUsers={handleShowUsers}
+        />
+      }
+      {gameState === 'gameroom' &&
+        <TestGameroom 
+          roomName={roomName}
+          handleScoreSubmit={handleScoreSubmit}
+        />
+      }
+      {gameState === 'postgame' &&
+        <TestPostGame />
+      }
     </div>
   );
 };

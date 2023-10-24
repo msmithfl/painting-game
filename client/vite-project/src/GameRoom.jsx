@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import io from 'socket.io-client';
 
-function TempGameRoom() {
+function GameRoom() {
     const navigate = useNavigate();
     const { roomName } = useParams();
     const [score, setScore] = useState();
@@ -23,9 +23,13 @@ function TempGameRoom() {
     }, []); //roomName, userName (previous setup)
 
     const handleScoreSubmit = () => {
+        //setScore(score);
+
         if (socket) {
             socket.emit('sendScore', score);
         }
+        //console.log(userList);
+        navigate(`/postgame/${roomName}`);
     }
 
     return (
@@ -45,4 +49,4 @@ function TempGameRoom() {
     )
 }
 
-export default TempGameRoom;
+export default GameRoom;
