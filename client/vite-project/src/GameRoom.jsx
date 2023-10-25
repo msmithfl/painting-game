@@ -1,52 +1,39 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import io from 'socket.io-client';
+import GameCanvas from './GameCanvas';
 
-function GameRoom() {
-    const navigate = useNavigate();
-    const { roomName } = useParams();
-    const [score, setScore] = useState();
-    const [userList, setUserList] = useState([]);
-    const [socket, setSocket] = useState(null);
-    const [userName, _] = useState(localStorage.getItem('username'));
+function GameRoom({ roomName, handleScoreSubmit }) {
+  const [score, setScore] = useState();
+  const [timer, setTimer] = useState(20); // Set the initial countdown time in seconds
 
-    useEffect(() => {
-        const newSocket = io('http://localhost:3001');
-        setSocket(newSocket);
+  useEffect(() => {
+    // Start the countdown when the component mounts
+    const countdownInterval = setInterval(() => {
+      // Decrement the timer by 1 second
+      setTimer((prevTimer) => prevTimer - 1);
 
-        newSocket.emit('joinRoom', roomName, userName);
+      // Check if the timer has reached 1
+      if (timer === 1) {
+        handleScoreSubmit(score);
+        
+        // Clear the interval to stop the countdown
+        clearInterval(countdownInterval);
+      }
+    }, 1000); // Update the timer every 1 second
 
-        // Update the user list
-        newSocket.on('updateUserList', (users) => {
-            setUserList(users);
-        });
-    }, []); //roomName, userName (previous setup)
+    // Clean up the interval when the component unmounts
+    return () => {
+      clearInterval(countdownInterval);
+    };
+  }, [handleScoreSubmit, timer]);
 
-    const handleScoreSubmit = () => {
-        //setScore(score);
-
-        if (socket) {
-            socket.emit('sendScore', score);
-        }
-        //console.log(userList);
-        navigate(`/postgame/${roomName}`);
-    }
-
-    return (
-        <div>
-            <h2>Temp Game Room</h2>
-            <h2>Username: {userName}</h2>
-            <p>Enter a number:</p>
-            <input type="text" onChange={(e) => {setScore(e.target.value)}} />
-            <button onClick={handleScoreSubmit}>Submit</button>
-            <h3>Users in the Room:</h3>
-            <ul>
-                {userList.map((user) => (
-                <li key={user.id}>{user.userName}</li>
-                ))}
-            </ul>
-        </div> 
-    )
+  return (
+    <div>
+      <h2>Gameroom: {roomName}</h2>
+      <p>Time left: {timer} seconds</p>
+      <GameCanvas />
+      <input onChange={(e) => setScore(e.target.value)} />
+    </div>
+  );
 }
 
 export default GameRoom;

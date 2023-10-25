@@ -47,7 +47,7 @@ io.on('connection', (socket) => {
         user.isReady = !isReady;
       }
       io.to(roomName).emit('updateUserList', usersInRooms[roomName]);
-      console.log(usersInRooms[roomName]);
+      //console.log(usersInRooms[roomName]);
     });
   });
   
@@ -58,25 +58,22 @@ io.on('connection', (socket) => {
       if (user) {
         user.score = score;
       }
-      //io.to(roomName).emit('updateUserList', usersInRooms[roomName]);
-      console.log(usersInRooms[roomName]);
+      //console.log(usersInRooms[roomName]);
     });
   });
 
   socket.on('getUsers', (roomName) => {
-  // Check if the room exists
-  if (usersInRooms[roomName]) {
-    const userList = usersInRooms[roomName];
-    socket.emit('returnUsers', userList); // Emit the list of users back to the client
-  } else {
-    socket.emit('returnUsers', []); // Return an empty array if the room doesn't exist
-  }
-});
+    if (usersInRooms[roomName]) {
+      const userList = usersInRooms[roomName];
+      socket.emit('returnUsers', userList); // Emit the list of users back to the client
+    } else {
+      socket.emit('returnUsers', []); // Return an empty array if the room doesn't exist
+    }
+  });
 
 
   socket.on('disconnect', () => {
     console.log(`User ${socket.id} disconnected`);
-
     // Handle user removal from all rooms when they disconnect
     Object.keys(usersInRooms).forEach((roomName) => {
       usersInRooms[roomName] = usersInRooms[roomName].filter((user) => user.id !== socket.id);

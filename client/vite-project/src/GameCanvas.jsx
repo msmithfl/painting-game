@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 
-function GameScreen() {
+function GameCanvas() {
   const canvasRef = useRef(null);
   const [ctx, setCtx] = useState(null);
   const [drawing, setDrawing] = useState(false);
@@ -89,4 +89,4 @@ function GameScreen() {
   );
 }
 
-export default GameScreen;
+export default GameCanvas;
