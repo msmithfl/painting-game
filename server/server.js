@@ -63,9 +63,16 @@ io.on('connection', (socket) => {
     });
   });
 
-  socket.on('getUsers', () => {
-    console.log('getting users');
-  })
+  socket.on('getUsers', (roomName) => {
+  // Check if the room exists
+  if (usersInRooms[roomName]) {
+    const userList = usersInRooms[roomName];
+    socket.emit('returnUsers', userList); // Emit the list of users back to the client
+  } else {
+    socket.emit('returnUsers', []); // Return an empty array if the room doesn't exist
+  }
+});
+
 
   socket.on('disconnect', () => {
     console.log(`User ${socket.id} disconnected`);

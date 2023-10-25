@@ -51,16 +51,30 @@ const Lobby = () => {
   }
 
   const handleScoreSubmit = (score) => {
-    console.log(score);
-    socket.emit('sendScore', score); 
+  console.log(score);
+
+  socket.emit('sendScore', score);
+
+  // Add a delay of, for example, 2000 milliseconds (2 seconds)
+  const delayMilliseconds = 500;
+
+  setTimeout(() => {
     setGameState('postgame');
-    console.log(userList);
-    //in final implementation this gameState should be set to 'postgame' when the timer is up
-  }
+    // Other code to run after the delay
+  }, delayMilliseconds);
+};
+
 
   const handleGetUsers = () => {
     //console.log(endUserList);
-    socket.emit('getUsers');
+    //socket.emit('getUsers');
+    // On the client-side
+    socket.emit('getUsers', roomName); // Replace 'YourRoomName' with the actual room name
+
+    socket.on('returnUsers', (userList) => {
+      console.log('Users in the room:', userList);
+      // Do something with the userList
+    });
   }
 
   return (
@@ -81,8 +95,10 @@ const Lobby = () => {
       }
       {gameState === 'postgame' &&
         <TestPostGame
-          handleGetUsers={handleGetUsers}
-          userList={userList}
+          // handleGetUsers={handleGetUsers}
+          //userList={userList}
+          socket={socket}
+          roomName={roomName}
         />
       }
     </div>
