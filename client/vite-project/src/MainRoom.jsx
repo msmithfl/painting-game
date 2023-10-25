@@ -51,8 +51,6 @@ const MainRoom = () => {
   }
 
   const handleScoreSubmit = (score) => {
-    console.log(score);
-
     socket.emit('sendScore', score);
 
     const delayMilliseconds = 500;

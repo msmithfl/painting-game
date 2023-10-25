@@ -1,6 +1,6 @@
 export const getRandomUsername = () => {
     // If the username has already been set in localStorage, use that 
-    // if (localStorage.getItem('username') !== null) { return localStorage.getItem('username') }
+    if (localStorage.getItem('username') !== null) { return localStorage.getItem('username') }
   
     const adverbs = ['Whimsically', 'Wackily', 'Hilariously', 'Zestily', 'Quirkily'];
     const adjectives = ['Zany', 'Boisterous', 'Eccentric', 'Ludicrous', 'Bizarre', 'Buff'];

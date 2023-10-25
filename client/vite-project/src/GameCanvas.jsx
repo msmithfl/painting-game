@@ -57,6 +57,7 @@ function GameCanvas() {
           ctx.beginPath();
         }}
         onMouseMove={draw}
+        style={{ backgroundColor: "white" }}
       />
       <div>
         <div>
